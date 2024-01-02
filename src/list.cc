@@ -139,3 +139,5 @@ void SinglyLinkedList<T>::view_list() {
     }
     cout << endl;
 }
+
+template class SinglyLinkedList<int>;
