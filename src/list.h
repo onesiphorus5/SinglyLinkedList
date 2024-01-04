@@ -32,6 +32,9 @@ private:
         iterator( pointer ptr ) : t_ptr{ptr} {}
 
         // Operators
+        bool operator==( iterator iter ) {
+            return this->t_ptr == iter.t_ptr;
+        }
         bool operator!=( iterator iter ) {
             return this->t_ptr != iter.t_ptr;
         }
@@ -43,7 +46,6 @@ private:
             return this->t_ptr->t_value;
         }
 
-    private:
         pointer t_ptr;
     };
 
@@ -54,6 +56,7 @@ public:
     ~SinglyLinkedList();
 
     std::size_t size();
+    bool empty();
 
     void push_back( T value );
     void push_front( T value );
@@ -64,9 +67,10 @@ public:
     const T& back();
     const T& front();
 
-    void view_list(); // for debugging
+    iterator insert( iterator pos, T value );
+    iterator erase( iterator pos );
 
-    // TODO: implement insert()
+    void view_list(); // for debugging
 
     // iterator
     iterator begin() { return iterator( head_node ); }

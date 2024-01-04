@@ -89,3 +89,19 @@ TEST_CASE( "Testing the SinglyLinkedList class" ) {
         CHECK( l.size() == 0 );
     }
 }
+
+TEST_CASE( "Tests involving the iterator class" ) {
+    SUBCASE( "Testing range based 'for' loop" ) {
+        SinglyLinkedList<int> l = {5, 10, 15};
+        int expected_value = 5;
+        for ( auto value : l ) {
+            CHECK( expected_value == value );
+            expected_value += 5;
+        }
+    }
+
+    SUBCASE( "Testing insert()" ) {
+        SinglyLinkedList<int> l;
+
+    }
+}

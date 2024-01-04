@@ -49,6 +49,11 @@ std::size_t SinglyLinkedList<T>::size() {
 }
 
 template<class T>
+bool SinglyLinkedList<T>::empty() {
+    return this->size() == 0;
+}
+
+template<class T>
 void SinglyLinkedList<T>::push_back( T value ) {
     auto newNode = new SinglyLinkedList<T>::Node( value );
     if ( this->list_size == 0 ) {
@@ -125,6 +130,68 @@ void SinglyLinkedList<T>::pop_front() {
         this->head_node = next;
     }
     this->list_size -= 1;
+}
+
+template<class T>
+typename SinglyLinkedList<T>::iterator SinglyLinkedList<T>::insert( 
+    SinglyLinkedList<T>::iterator pos, T value ) {
+    auto newNode = new SinglyLinkedList<T>::Node( value );
+    auto prevNext = pos.t_ptr->next;
+
+    pos.t_ptr->next = newNode;
+    newNode->next = prevNext;
+
+    return ++pos;
+}
+
+template<class T>
+typename SinglyLinkedList<T>::iterator SinglyLinkedList<T>::erase( 
+    SinglyLinkedList<T>::iterator pos ) {
+
+    // If the list is empty
+    if ( this->empty() ) {
+        return this->end();
+    }
+
+    // If the list has only 1 element
+    if ( this->size() == 1 ) {
+        delete this->head_node;
+        this->head_node = this->tail_node = nullptr;
+
+        return this->end();
+    }
+
+    // If pos points to the head node
+    if ( pos == this->begin() ) {
+        auto head = this->begin().t_ptr;
+        auto new_head = head->next;
+        delete head;
+
+        this->head_node = new_head;
+        return this->begin();
+    }
+
+    // Find the iterator before the pos iterator
+    auto it = this->begin();
+    for ( ; it != pos; ++pos ) { ; }
+    
+    // If pos points to the tail node
+    if ( pos == this->end() ) {
+        auto new_tail = it.t_ptr;
+        delete this->tail_node;
+
+        this->tail_node = new_tail;
+        new_tail->next = nullptr;
+
+        return this->end();       
+    }
+
+    auto node_to_delete = pos.t_ptr;
+    auto prev_node = it.t_ptr;
+    prev_node->next = node_to_delete->next;
+    delete node_to_delete;
+
+    return iterator( prev_node->next );
 }
 
 template<class T>
