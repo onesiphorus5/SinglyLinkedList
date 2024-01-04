@@ -12,7 +12,6 @@ SinglyLinkedList<T>::SinglyLinkedList() :
 
 template<class T>
 SinglyLinkedList<T>::SinglyLinkedList( std::initializer_list<T> init_list ) {
-    // TODO: handle empty init_list
     auto it = std::begin( init_list );
     auto it_end = std::end( init_list );
     this->head_node = new SinglyLinkedList<T>::Node{ *it };
@@ -93,7 +92,7 @@ void SinglyLinkedList<T>::pop_back() {
         this->head_node = this->tail_node = nullptr;
     } else if ( list_size == 2 ) {
         delete this->tail_node;
-        this->head_node = this->tail_node;
+        this->tail_node = this->head_node;
     } else {
         auto curr_node = this->head_node;
         for ( ; curr_node != nullptr; curr_node = curr_node->next ) {
