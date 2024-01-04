@@ -136,23 +136,48 @@ template<class T>
 typename SinglyLinkedList<T>::iterator SinglyLinkedList<T>::insert( 
     SinglyLinkedList<T>::iterator pos, T value ) {
     auto newNode = new SinglyLinkedList<T>::Node( value );
-    auto prevNext = pos.t_ptr->next;
+    // If the list is empty
+    if ( this->empty() ) {
+        this->head_node = this->tail_node = newNode;
+        this->list_size += 1;
+        return iterator( newNode );
+    }
+    
+    this->list_size += 1;
 
-    pos.t_ptr->next = newNode;
-    newNode->next = prevNext;
+    // If pos iterator points to the head node
+    if ( pos == this->begin() ) {
+        newNode->next = this->head_node;
+        this->head_node = newNode;
 
-    return ++pos;
+        return iterator( newNode );
+    }
+    // If pos iterator points to one position past the tail node
+    if ( pos == this->end() ) {
+        this->tail_node->next = newNode;
+        this->tail_node = newNode;
+
+        return iterator( newNode );
+    }
+
+    // Find the iterator before the pos iterator
+    auto iter = this->begin();
+    for ( ; iterator( iter.t_ptr->next ) != pos; ++iter ) { ; }
+
+    iter.t_ptr->next = newNode;
+    newNode->next = pos.t_ptr;
+    return iterator( newNode );
 }
 
 template<class T>
 typename SinglyLinkedList<T>::iterator SinglyLinkedList<T>::erase( 
     SinglyLinkedList<T>::iterator pos ) {
-
     // If the list is empty
     if ( this->empty() ) {
         return this->end();
     }
 
+    this->list_size -= 1;
     // If the list has only 1 element
     if ( this->size() == 1 ) {
         delete this->head_node;
@@ -172,12 +197,12 @@ typename SinglyLinkedList<T>::iterator SinglyLinkedList<T>::erase(
     }
 
     // Find the iterator before the pos iterator
-    auto it = this->begin();
-    for ( ; it != pos; ++pos ) { ; }
+    auto iter = this->begin();
+    for ( ; iterator( iter.t_ptr->next ) != pos; ++iter ) { ; }
     
     // If pos points to the tail node
     if ( pos == this->end() ) {
-        auto new_tail = it.t_ptr;
+        auto new_tail = iter.t_ptr;
         delete this->tail_node;
 
         this->tail_node = new_tail;
@@ -187,7 +212,7 @@ typename SinglyLinkedList<T>::iterator SinglyLinkedList<T>::erase(
     }
 
     auto node_to_delete = pos.t_ptr;
-    auto prev_node = it.t_ptr;
+    auto prev_node = iter.t_ptr;
     prev_node->next = node_to_delete->next;
     delete node_to_delete;
 

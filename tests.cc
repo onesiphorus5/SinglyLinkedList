@@ -100,8 +100,32 @@ TEST_CASE( "Tests involving the iterator class" ) {
         }
     }
 
-    SUBCASE( "Testing insert()" ) {
+    SUBCASE( "Testing insert() and erase()" ) {
         SinglyLinkedList<int> l;
+        auto pos = l.begin();
+        l.insert( pos, 5 );
+        CHECK( l.size() == 1 );
+        CHECK( l.front() == 5 );
+        CHECK( l.back() == 5 );
 
+        l.push_back( 10 );
+        pos = std::find( l.begin(), l.end(), 10 );
+        l.insert( pos, 15 );
+        CHECK( l.size() == 3 );
+        CHECK( l.front() == 5 );
+        CHECK( l.back() == 10 );
+
+        pos = std::find( l.begin(), l.end(), 15 );
+        l.erase( pos );
+        CHECK( l.size() == 2 );
+        CHECK( l.front() == 5 );
+        CHECK( l.back() == 10 );
+        l.push_back( 15 );
+
+        int expected_value = 5;
+        for ( auto value : l ) {
+            CHECK( expected_value == value );
+            expected_value += 5;
+        }
     }
 }
